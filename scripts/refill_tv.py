@@ -107,9 +107,9 @@ parse_channel_videos(channel_username="T90Official", limit=70, mydb=db_5) # aoe2
 list_json["5"] = parse_db_to_channel(db_5)
 
 # 10
-db_10 = initialize_database("./db/ch10.json")
+db_10 = initialize_database("./db/ch6.json")
 parse_playlist_videos("PLD2MrnSI-2rphxMVOL9xSpntrIPnIcu_H", mydb=db_10) # gaming soundtrack
-list_json["10"] = parse_db_to_channel(db_10)
+list_json["6"] = parse_db_to_channel(db_10)
 
 
 
