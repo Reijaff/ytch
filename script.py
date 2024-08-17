@@ -2,13 +2,14 @@ import scraptube
 from tinydb import TinyDB
 import logging
 import json
+import random
 
 import time
 from datetime import datetime
 
 # Centralize database initialization
-db_channels = TinyDB("ch1.json")
-db_playlists = TinyDB("ch3.json")
+db_1 = TinyDB("ch1.json")
+db_3 = TinyDB("ch3.json")
 
 
 logging.basicConfig(
@@ -16,9 +17,9 @@ logging.basicConfig(
 )
 
 
-def parse_db_to_playlist(db):
+def parse_db_to_channel(db):
     logging.info("Starting database parsing...")
-    playlist = {}
+    videos = []  # Store videos in a list for shuffling
     current_time = int(time.time())
 
     for i, v in enumerate(db.all(), 1):
@@ -34,17 +35,27 @@ def parse_db_to_playlist(db):
             else 0
         )
 
-        playlist[str(i)] = {
+        videos.append({
             "id": vid,
             "title": v.get("title", {}).get("runs", [{}])[0].get("text"),
-            "playAt": current_time,  #  + dur,  # Calculate playAt
             "duration": dur,
-        }
+        })
 
-        current_time += dur  # Increment for the next video
+    # Shuffle the videos
+    random.shuffle(videos)
+
+    # Assign playAt times after shuffling
+    playlist = {}
+    for i, video in enumerate(videos, 1):
+        playlist[str(i)] = {
+            **video,  # Include id, title, duration
+            "playAt": current_time,
+        }
+        current_time += video["duration"]
 
     logging.info("Database parsing completed.")
     return playlist
+
 
 
 def parse_videos(videos_generator, db):
@@ -57,37 +68,31 @@ def parse_videos(videos_generator, db):
         print(title)
 
 
-def parse_channel_videos(channel_username=None, limit=None):
+def parse_channel_videos(channel_username=None, limit=None, mydb=None):
     """Parses videos from a YouTube channel."""
     videos_generator = scraptube.get_channel(
         channel_username=channel_username,
         limit=limit,
     )
-    parse_videos(videos_generator, db_channels)
+    parse_videos(videos_generator, mydb)
 
 
-def parse_playlist_videos(playlist_id, limit=None):
+def parse_playlist_videos(playlist_id, limit=None, mydb=None):
     """Parses videos from a YouTube playlist."""
     videos_generator = scraptube.get_playlist(playlist_id=playlist_id, limit=limit)
-    parse_videos(videos_generator, db_playlists)
-
+    parse_videos(videos_generator, mydb)
 
 # Example usage
-parse_channel_videos(channel_username="BrightWorksTV", limit=20)
-parse_playlist_videos("PLJCXrsW_esBlb1BYfeNhY4kJQuNYoDpF_")
-# 
-# parse_channel_videos(channel_username="Requiem_tv", limit=20)
-# https://www.youtube.com/playlist?list=PL9ijWAhxNikKT4g5qPnsGzKN-ZJjMheyr
+parse_channel_videos(channel_username="BrightWorksTV", limit=100, mydb=db_1)
+parse_playlist_videos("PLJCXrsW_esBlb1BYfeNhY4kJQuNYoDpF_", mydb=db_3)
+parse_playlist_videos("PL9ijWAhxNikKT4g5qPnsGzKN-ZJjMheyr", mydb=db_1)
 
 # Example Usage:
 list_json = {}
-ch1_data = parse_db_to_playlist(db_channels)  # Or use db_playlists
-ch3_data = parse_db_to_playlist(db_playlists)  # Or use db_playlists
+ch1_data = parse_db_to_channel(db_1)
+ch3_data = parse_db_to_channel(db_3)
 
 list_json["1"] = ch1_data
 list_json["2"] = ch3_data
-
-
-# json.dumps(list_json))
 
 open("list.json", "w").write(json.dumps(list_json))
