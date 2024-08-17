@@ -2,13 +2,22 @@
 <html lang="en">
 
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2582CWYFEE"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-2582CWYFEE');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap">
     <title>YTCH</title>
-    <meta name="description" content="Watch Youtube Channels">
+    <meta name="description" content="Watch Youtube channels, together.">
     <link rel="stylesheet" href="style.css">
     <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
@@ -16,6 +25,8 @@
 </head>
 
 <body>
+
+
     <div id="player"></div>
     <div class="static-noise"></div>
     <div class="power-screen"></div>
@@ -28,38 +39,121 @@
         <div class="bar bar-6"></div>
         <div class="bar bar-7"></div>
     </div>
-	<div class="info" style="display: none;">
+
+    <div class="volume-steps">
+        <div class="wrapper">
+            <div class="text">volume</div>
+            <div class="steps">
+            </div>
+        </div>
+    </div>
+
+    <div class="info">
         <div class="wrapper">
             <div class="close" onclick="toggleInfo()"><img src="icons/x.svg"></div>
             <div class="content">
                 <div class="title">Contact</div>
-                <div class="text">ytchxyz@gmail.com</div>
+                <div class="text"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3c45485f544445467c5b515d5550125f5351">[email&#160;protected]</a></div>
                 <div class="title">Support</div>
-                <div class="text">bc1q4s2f6df2cqa8stenwp8y5tlmd5pywy8dwqqxvh</div>
+                <div class="text">
+                    <a href="https://www.buymeacoffee.com/hadisafa">Buy Me a Coffee</a>
+                    <a href="https://www.patreon.com/hadisafa">Patreon</a>
+                </div>
             </div>
         </div>
     </div>
+
+    <div class="guide">
+        <div class="wrapper">
+            <div class="close" onclick="toggleGuide()"><img src="icons/x.svg"></div>
+            <div class="content">
+                <div class="item">
+                    <div class="name">channel 1</div>
+                    <div class="value">science and technology</div>
+                </div>
+                <div class="item">
+                    <div class="name">channel 2</div>
+                    <div class="value">Travel and Events</div>
+                </div>
+                <div class="item">
+                    <div class="name">channel 3</div>
+                    <div class="value">food</div>
+                </div>
+                <div class="item">
+                    <div class="name">channel 4</div>
+                    <div class="value">Architecture</div>
+                </div>
+                <div class="item">
+                    <div class="name">channel 5</div>
+                    <div class="value">Film and Animation</div>
+                </div>
+                <div class="item">
+                    <div class="name">channel 6</div>
+                    <div class="value">Documentaries</div>
+                </div>
+                <div class="item">
+                    <div class="name">channel 7</div>
+                    <div class="value">Comedy</div>
+                </div>
+                <div class="item">
+                    <div class="name">channel 8</div>
+                    <div class="value">Music</div>
+                </div>
+                <div class="item">
+                    <div class="name">channel 9</div>
+                    <div class="value">Autos and Vehicles</div>
+                </div>
+                <div class="item">
+                    <div class="name">channel 10</div>
+                    <div class="value">News and Politics</div>
+                </div>
+                <div class="item">
+                    <div class="name">channel 11</div>
+                    <div class="value">UFC</div>
+                </div>
+                <div class="item">
+                    <div class="name">channel 12</div>
+                    <div class="value">Podcasts/Interviews/Talk Shows</div>
+                </div>
+                <div class="item">
+                    <div class="name">channel 13</div>
+                    <div class="value">Gaming</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="control">
         <div class="wrapper">
-            <div class="button power min" onclick="togglePower()"><img src="icons/power.svg"></div>
-            <div class="button minimize" onclick="toggleControl()"><img src="icons/minimize-2.svg"></div>
+            <div class="button min power-button" onclick="togglePower()"><img src="icons/power.svg"></div>
+            <div class="button  min" onclick="toggleGuide()"><img src="icons/book-open.svg"></div>
+            <div class="button" onclick="toggleControl()"><img class="minimizeImg" src="icons/minimize-2.svg"></div>
         </div>
-        <div class="wrapper min">
-            <div class="left-buttons">
-                <div class="button" onclick="toggleMute()"><img src="icons/volume-x.svg" class="muteIcon"></div>
-                <div class="button" onclick="toggleInfo()"><img src="icons/info.svg"></div>
+        <div class="wrapper">
+            <div class="long-button">
+                <div class="button  min" onclick="changeVolume(5)"><img src="icons/plus.svg"></div>
+                <div class="button  min" onclick="changeVolume(-5)"><img src="icons/minus.svg"></div>
             </div>
-            <div class="right-buttons">
-                <div class="button" onclick="switchChannel(1)"><img src="icons/chevron-up.svg"></div>
-                <div class="button" onclick="switchChannel(-1)"><img src="icons/chevron-down.svg"></div>
+            <div class="middle-buttons">
+                <div class="button  min" onclick="toggleMute()"><img class="muteIcon" src="icons/volume-x.svg"></div>
+                <div class="button min" onclick="toggleInfo()"><img src="icons/info.svg"></div>
+            </div>
+            <div class="long-button">
+                <div class="button  min" onclick="switchChannel(1)"><img src="icons/chevron-up.svg"></div>
+                <div class="button min" onclick="switchChannel(-1)"><img src="icons/chevron-down.svg"></div>
             </div>
         </div>
-        <div class="wrapper min">
-            <div class="button video-id"></div>
+        <div class="wrapper">
+            <div class="videoIdElement min">
+                <div class="text"></div>
+            </div>
         </div>
     </div>
     <div class="channel-name"></div>
-	<script src="main.js"></script>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="main.js"></script>
+
 </body>
 
 </html>

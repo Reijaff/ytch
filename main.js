@@ -2,13 +2,17 @@ let staticNoise = document.querySelector(".static-noise");
 let smpte = document.querySelector(".smpte");
 let channelName = document.querySelector(".channel-name");
 let muteIcon = document.querySelector(".muteIcon");
-let videoId = document.querySelector(".video-id");
 let control = document.querySelector(".control");
 let powerScreen = document.querySelector(".power-screen");
 let info = document.querySelector(".info");
-let player, playingNow, playingNowOrder, startAt, vids;
+let guide = document.querySelector(".guide");
+let videoIdElement = document.querySelector(".videoIdElement .text");
+let volumeSteps = document.querySelector(".volume-steps .steps");
+let volumeStepsContainer = document.querySelector(".volume-steps");
+let player, playingNow, playingNowOrder, startAt, vids, volume;
 let channelNumber = 1;
-let isMin = false, isMuted = true, isOn = true, showInfo = false;
+let volumeFadeoutTimer, channelNameFadeoutTimer, controllerFadeoutTimer;
+let isMin = false, isMuted = true, isOn = true, showInfo = false, showGuide = false;
 
 if (localStorage.getItem("storedChannelNumber") === null) {
     channelNumber = 1;
@@ -17,13 +21,23 @@ if (localStorage.getItem("storedChannelNumber") === null) {
     channelNumber = Number(localStorage.getItem("storedChannelNumber"));
 }
 
+if (localStorage.getItem("storedVolume") === null) {
+    volume = 70;
+    localStorage.setItem("storedVolume", 70);
+} else {
+    volume = Number(localStorage.getItem("storedVolume"));
+}
+
 control.addEventListener("mouseover", function () {
-    control.style.animation = 0;
+    control.style.opacity = 1;
+    clearTimeout(controllerFadeoutTimer);
 });
 
 control.addEventListener("mouseleave", function () {
     if (isMin) {
-        control.style.animation = "fadeout 3s forwards";
+        controllerFadeoutTimer = setTimeout(() => {
+            control.style.opacity = 0;
+        }, 3000);
     }
 });
 
@@ -49,12 +63,13 @@ function getList() {
 }
 
 function playChannel(ch, s) {
+    clearTimeout(channelNameFadeoutTimer);
     (ch < 10) ? channelName.textContent = "CH 0" + ch : channelName.textContent = "CH " + ch;
-    control.style.display = "flex";
+    control.style.display = "block";
     smpte.style.opacity = 0;
     if (sync(ch)) {
         player.loadVideoById(playingNow, startAt);
-        player.setVolume(100);
+        player.setVolume(volume);
         player.setPlaybackRate(1);
     } else if (s) {
         getList();
@@ -121,26 +136,50 @@ function onErrorOccured(event) {
 
 function onPlayerReady(event) {
     getList();
+    control.style.display = "block";
+    document.addEventListener('keydown', (e) => {
+        console.log(e.key);
+        if (e.key === "ArrowUp")
+            switchChannel(1);
+        else if (e.key === "ArrowDown")
+            switchChannel(-1);
+        else if (e.key === "+" || e.key === "="  || e.key === "ArrowRight")
+            changeVolume(5);
+        else if (e.key === "-" || e.key === "_" || e.key === "ArrowLeft")
+            changeVolume(-5);
+        else if (e.key === "m")
+            toggleMute();
+        else if (e.key === " ")
+            toggleGuide();
+        else if (e.key === "Shift")
+            toggleControl();
+        else if (e.key === "Enter")
+            togglePower();
+        else if (e.key === "i")
+            toggleInfo();
+    });
 }
 
 function onPlayerStateChange(event) {
     staticNoise.style.opacity = 1;
+
     if (event.data == -1) {
-        videoId.textContent = "UNSTARTED";
+        videoIdElement.innerHTML = "UNSTARTED";
     } else if (event.data == 0) {
-        videoId.textContent = "ENDED";
+        videoIdElement.innerHTML = "ENDED";
         if (Object.keys(vids[channelNumber]).length == playingNowOrder) {
             getList();
         } else {
             playChannel(channelNumber, false);
         }
     } else if (event.data == 1) {
+        // PLAYING
         let _startAt = startAt;
         let _playingNow = playingNow;
         let _playingNowOrder = playingNowOrder;
         if (sync(channelNumber)) {
             if (_playingNow == playingNow && _playingNowOrder == playingNowOrder) {
-                if (Math.abs(_startAt - startAt) > 7) {
+                if (Math.abs(_startAt - startAt) > 10) {
                     player.seekTo(startAt);
                 }
             } else {
@@ -149,14 +188,17 @@ function onPlayerStateChange(event) {
         } else {
             getList();
         }
+        channelNameFadeoutTimer = setTimeout(() => {
+            channelName.style.opacity = 0;
+        }, 3000);
         staticNoise.style.opacity = 0;
-        videoId.textContent = playingNow;
+        videoIdElement.innerHTML = playingNow;
     } else if (event.data == 2) {
-        videoId.textContent = "PAUSED";
+        videoIdElement.innerHTML = "PAUSED";
     } else if (event.data == 3) {
-        videoId.textContent = "BUFFERING";
+        videoIdElement.innerHTML = "BUFFERING";
     } else if (event.data == 5) {
-        videoId.textContent = "VIDEO CUED";
+        videoIdElement.innerHTML = "VIDEO CUED";
     }
 }
 
@@ -165,14 +207,23 @@ function onAutoplayBlocked() {
 }
 
 function toggleMute() {
-    if (player.isMuted()) {
-        player.unMute();
-        isMuted = false;
-        muteIcon.src = "icons/volume-2.svg";
-    } else {
-        muteIcon.src = "icons/volume-x.svg";
-        player.mute();
-        isMuted = true;
+    if (isOn) {
+        if (player.isMuted()) {
+            player.unMute();
+            isMuted = false;
+            muteIcon.src = "icons/volume-2.svg";
+            if (volume == 0) volume = 5;
+            localStorage.setItem("storedVolume", volume);
+            volumeSteps.innerHTML = "";
+            for (let i = 0; i < volume; i += 5) {
+                volumeSteps.innerHTML += '<div class="step"></div>';
+            }
+        } else {
+            muteIcon.src = "icons/volume-x.svg";
+            player.mute();
+            isMuted = true;
+            volumeSteps.innerHTML = "";
+        }
     }
 }
 
@@ -187,26 +238,25 @@ function switchChannel(a) {
             channelNumber = 1;
         }
         localStorage.setItem("storedChannelNumber", channelNumber);
+        channelName.style.opacity = 1;
         playChannel(channelNumber, true);
     }
 }
 
 function toggleControl() {
+    clearTimeout(controllerFadeoutTimer);
     let min = document.querySelectorAll(".min");
-    let minimize = document.querySelector(".minimize");
-    let minimizeImg = document.querySelector(".minimize img");
+    let minimizeImg = document.querySelector(".minimizeImg");
     if (isMin) {
-        min[0].style.display = "flex";
-        min[1].style.display = "flex";
-        min[2].style.display = "flex";
-        minimize.style.margin = "0 0 1rem auto";
-        minimizeImg.src = "icons/minimize-2.svg";
+        min.forEach(e => {
+            e.style.display = "flex";
+        });
         isMin = false;
+        minimizeImg.src = "icons/minimize-2.svg";
     } else {
-        min[0].style.display = "none";
-        min[1].style.display = "none";
-        min[2].style.display = "none";
-        minimize.style.margin = "0";
+        min.forEach(e => {
+            e.style.display = "none";
+        });
         minimizeImg.src = "icons/maximize.svg";
         isMin = true;
     }
@@ -217,7 +267,6 @@ function togglePower() {
     if (isOn) {
         isOn = false;
         player.pauseVideo();
-        videoId.textContent = "POWER OFF";
         powerScreen.style.display = "block";
     } else {
         isOn = true;
@@ -232,5 +281,47 @@ function toggleInfo() {
     } else {
         showInfo = true;
         info.style.display = "flex";
+    }
+}
+
+function toggleGuide() {
+    if (showGuide) {
+        showGuide = false;
+        guide.style.display = "none";
+    } else {
+        showGuide = true;
+        guide.style.display = "flex";
+    }
+}
+
+
+function changeVolume(d) {
+    if (isOn) {
+        volumeStepsContainer.style.opacity = 1;
+        clearTimeout(volumeFadeoutTimer);
+        volume += d;
+        if (volume > 0) {
+            player.unMute();
+            isMuted = false;
+            muteIcon.src = "icons/volume-2.svg";
+        }
+        if (volume >= 100) {
+            volume = 100;
+        }
+        if (volume <= 0) {
+            volume = 0;
+            muteIcon.src = "icons/volume-x.svg";
+            player.mute();
+            isMuted = true;
+        }
+        localStorage.setItem("storedVolume", volume);
+        player.setVolume(volume);
+        volumeSteps.innerHTML = "";
+        for (let i = 0; i < volume; i += 5) {
+            volumeSteps.innerHTML += '<div class="step"></div>';
+        }
+        volumeFadeoutTimer = setTimeout(() => {
+            volumeStepsContainer.style.opacity = 0;
+        }, 3000);
     }
 }
