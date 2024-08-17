@@ -75,7 +75,9 @@ def parse_playlist_videos(playlist_id, limit=None):
 # Example usage
 # parse_channel_videos(channel_username="BrightWorksTV", limit=20)
 # parse_playlist_videos("PLJCXrsW_esBlb1BYfeNhY4kJQuNYoDpF_")
-
+# 
+# parse_channel_videos(channel_username="Requiem_tv", limit=20)
+# https://www.youtube.com/playlist?list=PL9ijWAhxNikKT4g5qPnsGzKN-ZJjMheyr
 
 # Example Usage:
 list_json = {}
