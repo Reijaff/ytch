@@ -9,6 +9,7 @@ from datetime import datetime
 
 # Centralize database initialization
 db_1 = TinyDB("ch1.json")
+db_2 = TinyDB("ch2.json")
 db_3 = TinyDB("ch3.json")
 
 
@@ -83,16 +84,23 @@ def parse_playlist_videos(playlist_id, limit=None, mydb=None):
     parse_videos(videos_generator, mydb)
 
 # Example usage
-parse_channel_videos(channel_username="BrightWorksTV", limit=100, mydb=db_1)
-parse_playlist_videos("PLJCXrsW_esBlb1BYfeNhY4kJQuNYoDpF_", mydb=db_3)
-parse_playlist_videos("PL9ijWAhxNikKT4g5qPnsGzKN-ZJjMheyr", mydb=db_1)
+parse_channel_videos(channel_username="BrightWorksTV", limit=100, mydb=db_1) # brightworks tv
+parse_playlist_videos("PL9ijWAhxNikKT4g5qPnsGzKN-ZJjMheyr",limit=100, mydb=db_1) # requiem tv
+
+parse_channel_videos(channel_username="Ar-BARon", limit=30, mydb=db_2) # arbaron
+parse_channel_videos(channel_username="lostdeadmanthree", limit=100, mydb=db_2) # lostdeadman
+parse_channel_videos(channel_username="dskinnerify", limit=None, mydb=db_2) # dskinnerify
+
+parse_playlist_videos("PLJCXrsW_esBlb1BYfeNhY4kJQuNYoDpF_", mydb=db_3) # gaming soundtrack
 
 # Example Usage:
 list_json = {}
 ch1_data = parse_db_to_channel(db_1)
+ch2_data = parse_db_to_channel(db_2)
 ch3_data = parse_db_to_channel(db_3)
 
 list_json["1"] = ch1_data
-list_json["2"] = ch3_data
+list_json["2"] = ch2_data
+list_json["3"] = ch3_data
 
 open("list.json", "w").write(json.dumps(list_json))
