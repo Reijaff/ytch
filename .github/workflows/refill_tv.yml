@@ -4,8 +4,6 @@ on:
   schedule:
     - cron:  '0 0 */3 * *' 
   workflow_dispatch: 
-  push:
-    branches: ["main"] 
 
 permissions:
   contents: read
@@ -38,8 +36,8 @@ jobs:
 
       - name: Commit changes
         run: |
-          # git config --global user.name 'Reijaff'
-          # git config --global user.email 'interlord406@gmail.com'
+          git config --global user.name 'Reijaff'
+          git config --global user.email 'interlord406@gmail.com'
           git add .
           git commit -m "Automated update from refill_tv.py $(date)"
 
