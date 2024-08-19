@@ -1,8 +1,8 @@
-name: Refill TV
+name: Refill TV and deploy to Github Pages
 
 on:
   schedule:
-    - cron:  '0 0 */3 * *' 
+    - cron:  '0 0 */3 * *'
   workflow_dispatch: 
 
 permissions:
@@ -11,7 +11,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: ${{ github.workflow }}-${{ github.ref }} # More specific concurrency control
   cancel-in-progress: true
 
 jobs:
@@ -34,16 +34,23 @@ jobs:
         with:
           python-version: '3.11' 
           cache: 'pip' 
+          cache-dependency-path: 'requirements.txt' # Cache based on dependencies
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
+          pip install --upgrade pip
           pip install -r requirements.txt 
 
       - name: Execute script
         run: python ./scripts/refill_tv.py
 
+      - name: Get commit hash (if changes were made)
+        id: get-commit-hash
+        if: steps.add-and-commit.outputs.committed == 'true'
+        run: echo "commit_hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+
       - name: Commit & Push changes (if any)
+        id: add-and-commit
         uses: EndBug/add-and-commit@v9
         with:
           author_name: Reijaff
@@ -53,13 +60,16 @@ jobs:
           push: true
       
       - name: Setup Pages
+        if: steps.add-and-commit.outputs.committed == 'true' # Only if changes were committed
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
+        if: steps.add-and-commit.outputs.committed == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
 
       - name: Deploy to GitHub Pages
+        if: steps.add-and-commit.outputs.committed == 'true'
         id: deployment
         uses: actions/deploy-pages@v4
