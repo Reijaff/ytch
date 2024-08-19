@@ -3,6 +3,7 @@ name: Refill TV
 on:
   schedule:
     - cron:  '0 0 */3 * *' # Every 3 days at midnight
+  workflow_dispatch:
 
 jobs:
   refill:
