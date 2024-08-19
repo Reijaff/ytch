@@ -1,0 +1,38 @@
+name: Refill TV
+
+on:
+  schedule:
+    - cron:  '0 0 */3 * *' # Every 3 days at midnight
+
+jobs:
+  refill:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x' # Use the appropriate Python version
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt # If your script has dependencies
+
+      - name: Execute script
+        run: python ./scripts/refill_tv.py
+
+      - name: Commit changes
+        run: |
+          git config --global user.name 'Reijaff'
+          git config --global user.email 'intelord406@gmail.com'
+          git add .
+          git commit -m "Automated update from refill_tv.py"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main # Or your default branch
