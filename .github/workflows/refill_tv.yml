@@ -42,3 +42,10 @@ jobs:
           message: "Automated update from refill_tv.py $(date)"
           add: '.'
           push: true
+      
+      - name: Dispatch deploy workflow
+        if: steps.add-and-commit.outputs.committed == 'true' # Only trigger if commit was successful
+        uses: benc-uk/workflow-dispatch@v2
+        with:
+          workflow: Deploy to GitHub Pages # Name of your deploy.yml workflow
+          token: ${{ secrets.GITHUB_TOKEN }} 
