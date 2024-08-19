@@ -1,4 +1,4 @@
-name: Refill TV and Deploy to GitHub Pages
+name: Refill TV
 
 on:
   schedule:
@@ -7,18 +7,12 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: true 
 
 jobs:
   refill: 
     runs-on: ubuntu-latest
     outputs:
-      commit_hash: ${{ steps.get-commit-hash.outputs.commit_hash }} # Expose the commit hash as an output
+      commit_hash: ${{ steps.get-commit-hash.outputs.commit_hash }} 
 
     steps:
       - name: Checkout repository
@@ -42,8 +36,11 @@ jobs:
           git config --global user.name 'Reijaff'
           git config --global user.email 'interlord406@gmail.com'
           git add .
-          git commit -m "Automated update from refill_tv.py $(date)"
-
+          if ! git diff --quiet; then
+            git commit -m "Automated update from refill_tv.py $(date)"
+          else
+            echo "No changes to commit."
+          fi
 
       - name: Push changes (if any)
         uses: ad-m/github-push-action@master
@@ -53,28 +50,3 @@ jobs:
         id: get-commit-hash
         if: ${{ steps.push-changes.outcome == 'success' }} 
         run: echo "commit_hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-
-  deploy: 
-    needs: refill 
-    if: ${{ needs.refill.outputs.commit_hash != '' || github.event_name == 'workflow_dispatch' }} # Deploy if there's a new commit hash or it's manual
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout specific commit
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ needs.refill.outputs.commit_hash }}  # Use the commit hash from refill
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: '.'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
