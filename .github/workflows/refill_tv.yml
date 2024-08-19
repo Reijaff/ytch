@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt # If your script has dependencies
+          pip install -r requirements.txt
 
       - name: Execute script
         run: python ./scripts/refill_tv.py
@@ -30,7 +30,7 @@ jobs:
           git config --global user.name 'Reijaff'
           git config --global user.email 'intelord406@gmail.com'
           git add .
-          git commit -m "Automated update from refill_tv.py"
+          git commit -m "Automated update from refill_tv.py $(date)"
 
       - name: Push changes
         uses: ad-m/github-push-action@master
