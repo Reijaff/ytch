@@ -40,12 +40,8 @@ jobs:
           git config --global user.name 'Reijaff'
           git config --global user.email 'interlord406@gmail.com'
           git add .
-          # Check if there are changes before committing
-          if ! git diff --quiet; then
-            git commit -m "Automated update from refill_tv.py $(date)"
-          else
-            echo "No changes to commit."
-          fi
+          git commit -m "Automated update from refill_tv.py $(date)"
+
 
       - name: Push changes (if any)
         uses: ad-m/github-push-action@master
