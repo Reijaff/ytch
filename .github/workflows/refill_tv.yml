@@ -17,6 +17,8 @@ concurrency:
 jobs:
   refill: 
     runs-on: ubuntu-latest
+    outputs:
+      commit_sha: ${{ steps.push.outputs.commit_sha }} # Expose the commit SHA as an output
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -42,20 +44,24 @@ jobs:
           git commit -m "Automated update from refill_tv.py $(date)"
 
       - name: Push changes
+        id: push # Assign an ID to this step to access its outputs
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main 
 
   deploy: 
-    needs: refill # This line ensures `deploy` runs after `refill`
+    needs: refill 
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout specific commit
         uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.refill.outputs.commit_sha }} # Checkout the commit from 'refill' job
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
