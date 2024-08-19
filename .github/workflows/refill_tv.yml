@@ -18,10 +18,14 @@ jobs:
   refill: 
     runs-on: ubuntu-latest
     outputs:
-      commit_sha: ${{ steps.push.outputs.commit_sha }} # Expose the commit SHA as an output
+      commit_sha: ${{ steps.push.outputs.commit_sha }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: main 
+          fetch-all: true
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -44,7 +48,7 @@ jobs:
           git commit -m "Automated update from refill_tv.py $(date)"
 
       - name: Push changes
-        id: push # Assign an ID to this step to access its outputs
+        id: push 
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -63,9 +67,9 @@ jobs:
       - name: Checkout specific commit
         uses: actions/checkout@v4
         with:
-          ref: ${{ needs.refill.outputs.commit_sha }} # Checkout the commit from 'refill' job
-          fetch-depth: 0  # Add this line to disable caching
-
+          ref: ${{ needs.refill.outputs.commit_sha }} 
+          fetch-depth: 0 
+          fetch-all: true
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
