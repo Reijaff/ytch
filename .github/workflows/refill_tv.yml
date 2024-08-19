@@ -6,7 +6,7 @@ on:
   workflow_dispatch: 
 
 permissions:
-  contents: write
+  contents: write 
 
 jobs:
   refill: 
@@ -16,12 +16,15 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4 
+        uses: actions/checkout@v4
+        with: 
+          fetch-depth: 0 
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11' 
+          cache: 'pip' 
 
       - name: Install dependencies
         run: |
@@ -31,18 +34,11 @@ jobs:
       - name: Execute script
         run: python ./scripts/refill_tv.py
 
-      - name: Commit changes (if any)
-        run: |
-          git config --global user.name 'Reijaff'
-          git config --global user.email 'interlord406@gmail.com'
-          git add .
-          git commit -m "Automated update from refill_tv.py $(date)"
-
-      - name: Push changes (if any)
-        uses: ad-m/github-push-action@master
-        if: ${{ github.event_name != 'schedule' || steps.commit-changes.outcome == 'success' }}
-
-      - name: Get commit hash (if pushed)
-        id: get-commit-hash
-        if: ${{ steps.push-changes.outcome == 'success' }} 
-        run: echo "commit_hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+      - name: Commit & Push changes (if any)
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: Reijaff
+          author_email: interlord406@gmail.com
+          message: "Automated update from refill_tv.py $(date)"
+          add: '.'
+          push: true
