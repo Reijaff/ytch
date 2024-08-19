@@ -12,20 +12,22 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: true # Cancel previous runs if new one is triggered
+  cancel-in-progress: true 
 
 jobs:
   refill: 
     runs-on: ubuntu-latest
+    outputs:
+      commit_hash: ${{ steps.get-commit-hash.outputs.commit_hash }} # Expose the commit hash as an output
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4  # Updated to latest version
+        uses: actions/checkout@v4 
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'  # Latest stable Python 3 version
+          python-version: '3.11' 
 
       - name: Install dependencies
         run: |
@@ -45,20 +47,25 @@ jobs:
 
       - name: Push changes (if any)
         uses: ad-m/github-push-action@master
-        # Only push if there was a commit
-        if: ${{ github.event_name != 'schedule' || steps.commit-changes.outcome == 'success' }} 
+        if: ${{ github.event_name != 'schedule' || steps.commit-changes.outcome == 'success' }}
+
+      - name: Get commit hash (if pushed)
+        id: get-commit-hash
+        if: ${{ steps.push-changes.outcome == 'success' }} 
+        run: echo "commit_hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
   deploy: 
     needs: refill 
-    # Only run if refill job pushed changes or this is a manual trigger
-    if: ${{ needs.refill.outputs.changes_pushed == 'true' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ needs.refill.outputs.commit_hash != '' || github.event_name == 'workflow_dispatch' }} # Deploy if there's a new commit hash or it's manual
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout specific commit
         uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.refill.outputs.commit_hash }}  # Use the commit hash from refill
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
