@@ -7,9 +7,18 @@ on:
 
 permissions:
   contents: write 
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
   refill: 
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     outputs:
       commit_hash: ${{ steps.get-commit-hash.outputs.commit_hash }} 
@@ -39,13 +48,18 @@ jobs:
         with:
           author_name: Reijaff
           author_email: interlord406@gmail.com
-          message: "Automated update from refill_tv.py $(date)"
+          message: "Automated update from refill_tv.py"
           add: '.'
           push: true
       
-      - name: Dispatch deploy workflow
-        if: steps.add-and-commit.outputs.committed == 'true' # Only trigger if commit was successful
-        uses: benc-uk/workflow-dispatch@v2
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          workflow: Deploy to GitHub Pages # Name of your deploy.yml workflow
-          token: ${{ secrets.GITHUB_TOKEN }} 
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
