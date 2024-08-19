@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true # Cancel previous runs if new one is triggered
 
 jobs:
   refill: 
@@ -20,13 +20,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4  # Updated to latest version
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x' 
+          python-version: '3.11'  # Latest stable Python 3 version
 
       - name: Install dependencies
         run: |
@@ -36,35 +35,43 @@ jobs:
       - name: Execute script
         run: python ./scripts/refill_tv.py
 
-      - name: Commit changes
+      - name: Commit changes (if any)
         run: |
           git config --global user.name 'Reijaff'
           git config --global user.email 'interlord406@gmail.com'
           git add .
-          git commit -m "Automated update from refill_tv.py $(date)"
+          # Check if there are changes before committing
+          if ! git diff --quiet; then
+            git commit -m "Automated update from refill_tv.py $(date)"
+          else
+            echo "No changes to commit."
+          fi
 
-      - name: Push changes
+      - name: Push changes (if any)
         uses: ad-m/github-push-action@master
-
+        # Only push if there was a commit
+        if: ${{ github.event_name != 'schedule' || steps.commit-changes.outcome == 'success' }} 
 
   deploy: 
     needs: refill 
+    # Only run if refill job pushed changes or this is a manual trigger
+    if: ${{ needs.refill.outputs.changes_pushed == 'true' || github.event_name == 'workflow_dispatch' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-
-      - name: Checkout specific commit
+      - name: Checkout repository
         uses: actions/checkout@v4
-
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
