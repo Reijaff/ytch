@@ -57,10 +57,15 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
+      - name: Wait for changes to propagate
+        run: sleep 30
+
       - name: Checkout specific commit
         uses: actions/checkout@v4
         with:
           ref: ${{ needs.refill.outputs.commit_sha }} # Checkout the commit from 'refill' job
+          fetch-depth: 0  # Add this line to disable caching
+
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
