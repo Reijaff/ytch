@@ -1,10 +1,9 @@
 name: Deploy to GitHub Pages
 
 on:
-  workflow_run:  # Triggered by another workflow
-    workflows: ["Refill TV"]
-    types:
-      - completed
+  push:  # Trigger on push events
+    branches:
+      - main  # Only trigger on pushes to the main branch
   workflow_dispatch:  # Allow manual trigger
 
 permissions:
@@ -17,16 +16,13 @@ concurrency:
 
 jobs:
   deploy: 
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.outputs.commit_hash != '' || github.event_name == 'workflow_dispatch' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout specific commit
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.outputs.commit_hash }}  # Use the commit hash from the refill workflow
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
