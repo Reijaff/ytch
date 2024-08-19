@@ -2,15 +2,22 @@ name: Refill TV and Deploy to GitHub Pages
 
 on:
   schedule:
-    - cron:  '0 0 */3 * *' # Every 3 days at midnight
+    - cron:  '0 0 */3 * *' 
   workflow_dispatch: 
+  push:
+    branches: ["main"] 
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  refill: # Your existing job
+  refill: 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -31,8 +38,8 @@ jobs:
 
       - name: Commit changes
         run: |
-          git config --global user.name 'Reijaff'
-          git config --global user.email 'interlord406@gmail.com'
+          # git config --global user.name 'Reijaff'
+          # git config --global user.email 'interlord406@gmail.com'
           git add .
           git commit -m "Automated update from refill_tv.py $(date)"
 
@@ -42,7 +49,8 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main 
 
-  deploy: # The appended deployment job
+  deploy: 
+    needs: refill # This line ensures `deploy` runs after `refill`
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
