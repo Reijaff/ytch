@@ -1,2 +1,3 @@
 tinydb
 requests
+typing-extensions
