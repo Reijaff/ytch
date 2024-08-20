@@ -102,8 +102,8 @@ list_json["3"] = parse_db_to_channel(db_3)
 
 # 4
 db_4 = initialize_database("./db/ch4.json")
-parse_playlist_videos("PLf1MgnzRUat_MEw20ESJAL4IdWt-Ol5Aq", limit=70, mydb=db_4) # aoe4 drongo
-parse_playlist_videos("PL_nU2mPDh-ZtnUy35EiuBPr4exJeTQvQE", limit=30, mydb=db_4) # aoe4 papercut
+parse_playlist_videos("PLf1MgnzRUat_MEw20ESJAL4IdWt-Ol5Aq", limit=50, mydb=db_4) # aoe4 drongo
+parse_playlist_videos("PLhtm1GekY31I3BcJXNWNxMQGui49NUiEE", limit=50, mydb=db_4) # aoe4 farm man off
 list_json["4"] = parse_db_to_channel(db_4)
 
 # 5
