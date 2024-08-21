@@ -111,7 +111,10 @@ db_5 = initialize_database("./db/ch5.json")
 parse_channel_videos(channel_username="T90Official", limit=70, mydb=db_5) # aoe2 T90Official 
 list_json["5"] = parse_db_to_channel(db_5)
 
-
+# 6
+db_6 = initialize_database("./db/ch6.json")
+parse_channel_videos(channel_username="GameTrailers", limit=1500, mydb=db_6) # game trailers
+list_json["6"] = parse_db_to_channel(db_6)
 
 
 # Write the playlist to a file
