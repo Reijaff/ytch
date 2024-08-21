@@ -9,6 +9,7 @@ Currently streaming channels include:
 * Music
 * Aoe4 commentary
 * Aoe2 commentary
+* Game trailers
 
 Feel free to give it a try and let me know what you think!
 
