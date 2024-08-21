@@ -113,7 +113,7 @@ list_json["5"] = parse_db_to_channel(db_5)
 
 # 6
 db_6 = initialize_database("./db/ch6.json")
-parse_channel_videos(channel_username="GameTrailers", limit=1500, mydb=db_6) # game trailers
+parse_channel_videos(channel_username="GameTrailers", limit=2000, mydb=db_6) # game trailers
 list_json["6"] = parse_db_to_channel(db_6)
 
 
