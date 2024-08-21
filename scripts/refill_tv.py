@@ -56,28 +56,28 @@ def parse_db_to_channel(db):
     logging.info("Database parsing completed.")
     return playlist
 
-def parse_videos(videos_generator, db):
-    """
-    Parses videos from a generator and stores them in the database.
-    """
-    for video in videos_generator:
-        db.insert(video)
-        title = video.get("title", {}).get("runs", [{}])[0].get("text", "Unknown Title")
-        print(title)  # Provide feedback during parsing
 
-def parse_channel_videos(channel_username=None, limit=None, mydb=None):
+
+def parse_videos(videos_generator, db, filter_func=None):
+    for video in videos_generator:
+        if filter_func is None or filter_func(video):
+            db.insert(video)
+            title = video.get("title", {}).get("runs", [{}])[0].get("text", "Unknown Title")
+            print(title)  # Provide feedback during parsing
+
+def parse_channel_videos(channel_username=None, limit=None, mydb=None, filter_func=None):
     """Parses videos from a YouTube channel."""
     videos_generator = scraptube.get_channel(
         channel_username=channel_username,
         limit=limit,
     )
-    parse_videos(videos_generator, mydb)
+    parse_videos(videos_generator, mydb, filter_func)
 
 
-def parse_playlist_videos(playlist_id, limit=None, mydb=None):
+def parse_playlist_videos(playlist_id, limit=None, mydb=None, filter_func=None):
     """Parses videos from a YouTube playlist."""
     videos_generator = scraptube.get_playlist(playlist_id=playlist_id, limit=limit)
-    parse_videos(videos_generator, mydb)
+    parse_videos(videos_generator, mydb, filter_func)
 
 
 list_json = {}
@@ -112,8 +112,16 @@ parse_channel_videos(channel_username="T90Official", limit=70, mydb=db_5) # aoe2
 list_json["5"] = parse_db_to_channel(db_5)
 
 # 6
+def filter_short_videos(video):
+    dur_text = video.get("lengthText", {}).get("simpleText")
+    if dur_text:
+        dur = sum(int(x) * 60 ** i for i,x in enumerate(reversed(dur_text.split(":"))))
+        return dur < 600
+    return False
+
+
 db_6 = initialize_database("./db/ch6.json")
-parse_channel_videos(channel_username="GameTrailers", limit=2000, mydb=db_6) # game trailers
+parse_channel_videos(channel_username="GameTrailers", limit=2000, mydb=db_6, filter_func=filter_short_videos) # game trailers
 list_json["6"] = parse_db_to_channel(db_6)
 
 
