@@ -149,9 +149,17 @@ def filter_starcraft(video):
 db_8 = initialize_database("./db/ch8.json")
 parse_channel_videos(channel_username="ArtosisCasts", limit=100, mydb=db_8) # starcraft artosiscasts
 parse_channel_videos(channel_username="TommyStarcraft2", limit=100, mydb=db_8, filter_func=filter_starcraft) # starcraft tommystartcraft2
-
-# parse_playlist_videos("PLT0hfPWJS6_tn67k5DV5D4QT0bw-W2eDx", limit=50, mydb=db_7) # starcraft 2 lovko tv
 list_json["8"] = parse_db_to_channel(db_8)
+
+
+# 9
+db_9 = initialize_database("./db/ch9.json")
+parse_playlist_videos("PLiLSCJl00NYv9vMcQ7XTczOEeZOghcc9o", limit=100, mydb=db_9) # forza motorsport SCDR Racing
+parse_channel_videos(channel_username="nukaGT", limit=100, mydb=db_9) # forza motorsport nukagt
+list_json["9"] = parse_db_to_channel(db_9)
+
+
+
 
 
 # Write the playlist to a file
