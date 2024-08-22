@@ -4,12 +4,15 @@ I was inspired by [https://ytch.xyz](https://ytch.xyz) and decided to make my ow
 
 Currently streaming channels include:
 
+
 * Beyond all reason commentary
 * Beyond all reason playthrough
 * Music
 * Aoe4 commentary
 * Aoe2 commentary
 * Game trailers
+* Starcraft 2 commentary
+* Starcraft commentary
 
 Feel free to give it a try and let me know what you think!
 

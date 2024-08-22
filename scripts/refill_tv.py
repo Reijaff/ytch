@@ -124,6 +124,35 @@ db_6 = initialize_database("./db/ch6.json")
 parse_channel_videos(channel_username="GameTrailers", limit=2000, mydb=db_6, filter_func=filter_short_videos) # game trailers
 list_json["6"] = parse_db_to_channel(db_6)
 
+# 7
+def filter_starcraft2_short_videos(video):
+    dur_text = video.get("lengthText", {}).get("simpleText")
+    if dur_text:
+        dur = sum(int(x) * 60 ** i for i,x in enumerate(reversed(dur_text.split(":"))))
+        return dur < 3600
+    return False
+
+db_7 = initialize_database("./db/ch7.json")
+parse_playlist_videos("PLT0hfPWJS6_tn67k5DV5D4QT0bw-W2eDx", limit=50, mydb=db_7) # starcraft 2 lovko tv
+parse_channel_videos(channel_username="PiGCasts", limit=50, mydb=db_7, filter_func=filter_starcraft2_short_videos) # starcraft 2 pigcasts
+list_json["7"] = parse_db_to_channel(db_7)
+
+# 8
+def filter_starcraft(video):
+
+    title = video.get("title", {}).get("runs", [{}])[0].get("text", "Unknown Title")
+    if "startcraft 2".lower() in title.lower():
+        return False
+    else:
+        return True
+
+db_8 = initialize_database("./db/ch8.json")
+parse_channel_videos(channel_username="ArtosisCasts", limit=200, mydb=db_8) # starcraft artosiscasts
+parse_channel_videos(channel_username="TommyStarcraft2", limit=200, mydb=db_8, filter_func=filter_starcraft) # starcraft tommystartcraft2
+
+# parse_playlist_videos("PLT0hfPWJS6_tn67k5DV5D4QT0bw-W2eDx", limit=50, mydb=db_7) # starcraft 2 lovko tv
+list_json["8"] = parse_db_to_channel(db_8)
+
 
 # Write the playlist to a file
 with open("list.json", "w") as f:
