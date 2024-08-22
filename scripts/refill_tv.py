@@ -147,8 +147,8 @@ def filter_starcraft(video):
         return True
 
 db_8 = initialize_database("./db/ch8.json")
-parse_channel_videos(channel_username="ArtosisCasts", limit=200, mydb=db_8) # starcraft artosiscasts
-parse_channel_videos(channel_username="TommyStarcraft2", limit=200, mydb=db_8, filter_func=filter_starcraft) # starcraft tommystartcraft2
+parse_channel_videos(channel_username="ArtosisCasts", limit=100, mydb=db_8) # starcraft artosiscasts
+parse_channel_videos(channel_username="TommyStarcraft2", limit=100, mydb=db_8, filter_func=filter_starcraft) # starcraft tommystartcraft2
 
 # parse_playlist_videos("PLT0hfPWJS6_tn67k5DV5D4QT0bw-W2eDx", limit=50, mydb=db_7) # starcraft 2 lovko tv
 list_json["8"] = parse_db_to_channel(db_8)
