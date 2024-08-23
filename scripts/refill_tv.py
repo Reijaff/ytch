@@ -133,21 +133,21 @@ def filter_starcraft2_short_videos(video):
     return False
 
 db_7 = initialize_database("./db/ch7.json")
-parse_playlist_videos("PLT0hfPWJS6_tn67k5DV5D4QT0bw-W2eDx", limit=50, mydb=db_7) # starcraft 2 lovko tv
-parse_channel_videos(channel_username="PiGCasts", limit=50, mydb=db_7, filter_func=filter_starcraft2_short_videos) # starcraft 2 pigcasts
+parse_playlist_videos("PLT0hfPWJS6_tn67k5DV5D4QT0bw-W2eDx", limit=60, mydb=db_7) # starcraft 2 lovko tv
+parse_channel_videos(channel_username="PiGCasts", limit=60, mydb=db_7, filter_func=filter_starcraft2_short_videos) # starcraft 2 pigcasts
 list_json["7"] = parse_db_to_channel(db_7)
 
 # 8
 def filter_starcraft(video):
 
     title = video.get("title", {}).get("runs", [{}])[0].get("text", "Unknown Title")
-    if "startcraft 2".lower() in title.lower():
+    if "starcraft 2".lower() in title.lower():
         return False
     else:
         return True
 
 db_8 = initialize_database("./db/ch8.json")
-parse_channel_videos(channel_username="ArtosisCasts", limit=100, mydb=db_8) # starcraft artosiscasts
+parse_channel_videos(channel_username="ArtosisCasts", limit=150, mydb=db_8) # starcraft artosiscasts
 parse_channel_videos(channel_username="TommyStarcraft2", limit=100, mydb=db_8, filter_func=filter_starcraft) # starcraft tommystartcraft2
 list_json["8"] = parse_db_to_channel(db_8)
 
