@@ -146,8 +146,15 @@ def filter_starcraft(video):
     else:
         return True
 
+def filter_starcraft_short_videos(video):
+    dur_text = video.get("lengthText", {}).get("simpleText")
+    if dur_text:
+        dur = sum(int(x) * 60 ** i for i,x in enumerate(reversed(dur_text.split(":"))))
+        return dur < 3600
+    return False
+
 db_8 = initialize_database("./db/ch8.json")
-parse_channel_videos(channel_username="ArtosisCasts", limit=150, mydb=db_8) # starcraft artosiscasts
+parse_channel_videos(channel_username="ArtosisCasts", limit=150, mydb=db_8, filter_func=filter_starcraft_short_videos) # starcraft artosiscasts
 parse_channel_videos(channel_username="FalconPaladin", limit=100, mydb=db_8) # starcraft FalconPaladin
 # parse_channel_videos(channel_username="TommyStarcraft2", limit=100, mydb=db_8, filter_func=filter_starcraft) # starcraft tommystartcraft2
 list_json["8"] = parse_db_to_channel(db_8)
