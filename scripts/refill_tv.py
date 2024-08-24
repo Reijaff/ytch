@@ -158,6 +158,26 @@ parse_playlist_videos("PLiLSCJl00NYv9vMcQ7XTczOEeZOghcc9o", limit=100, mydb=db_9
 parse_channel_videos(channel_username="nukaGT", limit=100, mydb=db_9) # forza motorsport nukagt
 list_json["9"] = parse_db_to_channel(db_9)
 
+# 10
+db_10 = initialize_database("./db/ch10.json")
+parse_playlist_videos("PLNZqvMOPUHynQB1nFUA_ReMAdCZekYZtD", mydb=db_10) # microsoft flight simulator foredoomer
+list_json["10"] = parse_db_to_channel(db_10)
+
+# 11
+db_11 = initialize_database("./db/ch11.json")
+parse_channel_videos(channel_username="ganymede_", limit=100, mydb=db_11) # truck simulator ganymede
+list_json["11"] = parse_db_to_channel(db_11)
+
+# 12
+db_12 = initialize_database("./db/ch12.json")
+parse_playlist_videos("PLqHccTxQCXIxNQgrO4NVP7GCKQtiJrcgN", mydb=db_12) # train sim ds&m railways
+parse_playlist_videos("PLKnaE1W2SlVvw1J5hACYzVl5wmOJAW1k0", mydb=db_12) # train sim trains & co
+list_json["12"] = parse_db_to_channel(db_12)
+
+# 13
+db_13 = initialize_database("./db/ch13.json")
+parse_channel_videos(channel_username="NoAnnoyingCommentary", limit=200, mydb=db_13) # cod warzone NoAnnoyingCommentary
+list_json["13"] = parse_db_to_channel(db_13)
 
 
 
