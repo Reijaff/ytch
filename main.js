@@ -3,6 +3,8 @@ let smpte = document.querySelector(".smpte");
 let channelName = document.querySelector(".channel-name");
 let muteIcon = document.querySelector(".muteIcon");
 let control = document.querySelector(".control");
+let controlT1 = document.querySelector(".control .t-1");
+let controlT2 = document.querySelector(".control .t-2");
 let powerScreen = document.querySelector(".power-screen");
 let info = document.querySelector(".info");
 let guide = document.querySelector(".guide");
@@ -11,14 +13,22 @@ let volumeSteps = document.querySelector(".volume-steps .steps");
 let volumeStepsContainer = document.querySelector(".volume-steps");
 let player, playingNow, playingNowOrder, startAt, vids, volume;
 let channelNumber = 1;
-let volumeFadeoutTimer, channelNameFadeoutTimer, controllerFadeoutTimer;
-let isMin = false, isMuted = true, isOn = true, showInfo = false, showGuide = false;
+let volumeFadeoutTimer, channelNameFadeoutTimer, controllerFadeoutTimer, numberInputTimer;
+let isMin = false, isMuted = true, isOn = true, showInfo = false, showGuide = false, isControlSwipe = false;
+let touchStartX, touchStartY, touchMoveX, touchMoveY, controlCurrPos = 0, distanceMoved, channelNumberInput = "", lastChannelNumber;
 
 if (localStorage.getItem("storedChannelNumber") === null) {
     channelNumber = 1;
-    localStorage.setItem("storedChannelNumber", 1);
+    localStorage.setItem("storedChannelNumber", channelNumber);
 } else {
     channelNumber = Number(localStorage.getItem("storedChannelNumber"));
+}
+
+if (localStorage.getItem("storedLastChannelNumber") === null) {
+    lastChannelNumber = channelNumber;
+    localStorage.setItem("storedLastChannelNumber", lastChannelNumber);
+} else {
+    lastChannelNumber = Number(localStorage.getItem("storedLastChannelNumber"));
 }
 
 if (localStorage.getItem("storedVolume") === null) {
@@ -28,18 +38,68 @@ if (localStorage.getItem("storedVolume") === null) {
     volume = Number(localStorage.getItem("storedVolume"));
 }
 
-control.addEventListener("mouseover", function () {
+document.body.addEventListener("touchend", function () {
     control.style.opacity = 1;
     clearTimeout(controllerFadeoutTimer);
 });
 
-control.addEventListener("mouseleave", function () {
+document.body.addEventListener("mousemove", function (e) {
     if (isMin) {
+        control.style.opacity = 1;
+        clearTimeout(controllerFadeoutTimer);
         controllerFadeoutTimer = setTimeout(() => {
             control.style.opacity = 0;
         }, 3000);
     }
+    controlSwipeMove(e.clientX, e.clientY);
 });
+
+control.addEventListener("touchstart", (e) => {
+    controlSwipeDown(e.touches[0].clientX, e.touches[0].clientY);
+});
+
+control.addEventListener("mousedown", (e) => {
+    controlSwipeDown(e.clientX, e.clientY);
+});
+
+document.addEventListener("touchmove", (e) => {
+    controlSwipeMove(e.touches[0].clientX, e.touches[0].clientY);
+});
+
+document.addEventListener("touchend", (e) => {
+    controlSwipeEnd();
+});
+
+document.addEventListener("mouseup", (e) => {
+    controlSwipeEnd();
+});
+
+function controlSwipeDown(x, y) {
+    isControlSwipe = true;
+    touchStartX = x;
+    touchStartY = y;
+}
+
+function controlSwipeMove(x, y) {
+    if (isControlSwipe) {
+        touchMoveX = x;
+        touchMoveY = y;
+        distanceMoved = (touchMoveX - touchStartX);
+        t = distanceMoved + controlCurrPos;
+        if (t > 10) t = 10;
+        if (t < - control.offsetWidth - 10) t = - control.offsetWidth - 10;
+        controlT1.style.transform = "translateX(" + t + "px)";
+        controlT2.style.transform = "translateX(" + t + "px)";
+    }
+}
+
+function controlSwipeEnd(){
+    if (distanceMoved > 20) controlCurrPos = 0;
+    if (distanceMoved < -20) controlCurrPos = - control.offsetWidth;
+    controlT1.style.transform = "translateX(" + controlCurrPos + "px)";
+    controlT2.style.transform = "translateX(" + controlCurrPos + "px)";
+    isControlSwipe = false;
+}
 
 function resizePlayer() {
     let p = document.querySelector("#player");
@@ -64,17 +124,31 @@ function getList() {
 
 function playChannel(ch, s) {
     clearTimeout(channelNameFadeoutTimer);
-    (ch < 10) ? channelName.textContent = "CH 0" + ch : channelName.textContent = "CH " + ch;
-    control.style.display = "block";
-    smpte.style.opacity = 0;
-    if (sync(ch)) {
-        player.loadVideoById(playingNow, startAt);
-        player.setVolume(volume);
-        player.setPlaybackRate(1);
-    } else if (s) {
-        getList();
+    if (ch > 0 && ch < Object.keys(vids).length + 1) {
+        if (localStorage.getItem("storedChannelNumber") != ch) {
+            (ch < 10) ? channelName.textContent = "CH 0" + ch : channelName.textContent = "CH " + ch;
+            channelName.style.opacity = 1;
+            lastChannelNumber = channelNumber;
+            channelNumber = ch;
+            localStorage.setItem("storedLastChannelNumber", lastChannelNumber);
+            localStorage.setItem("storedChannelNumber", ch);
+        }
+        control.style.display = "flex";
+        smpte.style.opacity = 0;
+        if (sync(ch)) {
+            player.loadVideoById(playingNow, startAt);
+            player.setVolume(volume);
+            player.setPlaybackRate(1);
+        } else if (s) {
+            getList();
+        } else {
+            smpte.style.opacity = 1;
+        }
     } else {
-        smpte.style.opacity = 1;
+        channelName.textContent = "INVALID";
+        channelNameFadeoutTimer = setTimeout(() => {
+            channelName.style.opacity = 0;
+        }, 3000);
     }
 }
 
@@ -136,27 +210,35 @@ function onErrorOccured(event) {
 
 function onPlayerReady(event) {
     getList();
-    control.style.display = "block";
+    control.style.display = "flex";
+    if (localStorage.getItem("controlAnimate") === null) {
+        controlT1.style.animation = "2s swipeControl";
+        controlT2.style.animation = "2s swipeControl";
+        localStorage.setItem("controlAnimate", "1");
+    }
     document.addEventListener('keydown', (e) => {
-        console.log(e.key);
         if (e.key === "ArrowUp")
             switchChannel(1);
         else if (e.key === "ArrowDown")
             switchChannel(-1);
-        else if (e.key === "+" || e.key === "="  || e.key === "ArrowRight")
+        else if (e.key === "+" || e.key === "=" || e.key === "ArrowRight")
             changeVolume(5);
         else if (e.key === "-" || e.key === "_" || e.key === "ArrowLeft")
             changeVolume(-5);
-        else if (e.key === "m")
+        else if (e.key === "m" || e.key === "M")
             toggleMute();
         else if (e.key === " ")
             toggleGuide();
         else if (e.key === "Shift")
             toggleControl();
         else if (e.key === "Enter")
-            togglePower();
-        else if (e.key === "i")
+            goToChannel();
+        else if (e.key === "i" || e.key === "I")
             toggleInfo();
+        else if (e.key === "f" || e.key === "F")
+            toggleFullScreen();
+        else if (e.key === "0" || e.key === "1" || e.key === "2" || e.key === "3" || e.key === "4" || e.key === "5" || e.key === "6" || e.key === "7" || e.key === "8" || e.key === "9")
+            numberInput(e.key);
     });
 }
 
@@ -229,36 +311,35 @@ function toggleMute() {
 
 function switchChannel(a) {
     if (isOn) {
-        player.stopVideo();
-        channelNumber += a;
-        if (channelNumber < 1) {
-            channelNumber = Object.keys(vids).length;
+        let newChannelNumber = channelNumber + a;
+        if (newChannelNumber < 1) {
+            newChannelNumber = Object.keys(vids).length;
         }
-        if (channelNumber > Object.keys(vids).length) {
-            channelNumber = 1;
+        if (newChannelNumber > Object.keys(vids).length) {
+            newChannelNumber = 1;
         }
-        localStorage.setItem("storedChannelNumber", channelNumber);
-        channelName.style.opacity = 1;
-        playChannel(channelNumber, true);
+        playChannel(Number(newChannelNumber), true);
     }
 }
 
 function toggleControl() {
     clearTimeout(controllerFadeoutTimer);
     let min = document.querySelectorAll(".min");
+    let w = document.querySelectorAll(".control .w");
     let minimizeImg = document.querySelector(".minimizeImg");
     if (isMin) {
-        min.forEach(e => {
-            e.style.display = "flex";
-        });
+        min.forEach(e => { e.style.display = "flex"; });
         isMin = false;
         minimizeImg.src = "icons/minimize-2.svg";
+        w.forEach(e => { e.style.margin = "0 0 0.5rem 0"; });
     } else {
-        min.forEach(e => {
-            e.style.display = "none";
-        });
-        minimizeImg.src = "icons/maximize.svg";
+        min.forEach(e => { e.style.display = "none"; });
+        minimizeImg.src = "icons/maximize-2.svg";
         isMin = true;
+        w.forEach(e => { e.style.margin = "0"; });
+        controllerFadeoutTimer = setTimeout(() => {
+            control.style.opacity = 0;
+        }, 3000);
     }
 }
 
@@ -323,5 +404,54 @@ function changeVolume(d) {
         volumeFadeoutTimer = setTimeout(() => {
             volumeStepsContainer.style.opacity = 0;
         }, 3000);
+    }
+}
+
+function toggleFullScreen() {
+    let elem = document.body;
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    } else {
+        elem.requestFullscreen();
+    }
+}
+
+document.body.addEventListener("fullscreenchange", fullScreenChanged);
+function fullScreenChanged() {
+    let fullScreenIcon = document.querySelector(".control .full-screen-icon");
+    if (document.fullscreenElement) {
+        fullScreenIcon.src = "icons/minimize.svg";
+    } else {
+        fullScreenIcon.src = "icons/maximize.svg";
+    }
+
+}
+
+function numberInput(n) {
+    if (isOn) {
+        clearTimeout(numberInputTimer);
+        clearTimeout(channelNameFadeoutTimer);
+        channelNumberInput += n;
+        channelName.textContent = channelNumberInput;
+        channelName.style.opacity = 1;
+        numberInputTimer = setTimeout(() => {
+            playChannel(Number(channelNumberInput), true);
+            channelNumberInput = "";
+        }, 1800);
+    }
+}
+
+function recallChannel() {
+    if (isOn && lastChannelNumber != channelNumber) {
+        playChannel(Number(lastChannelNumber), true);
+    }
+}
+
+function goToChannel() {
+    if (isOn) {
+        clearTimeout(numberInputTimer);
+        clearTimeout(channelNameFadeoutTimer);
+        playChannel(Number(channelNumberInput), true);
+        channelNumberInput = "";
     }
 }

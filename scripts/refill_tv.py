@@ -148,7 +148,8 @@ def filter_starcraft(video):
 
 db_8 = initialize_database("./db/ch8.json")
 parse_channel_videos(channel_username="ArtosisCasts", limit=150, mydb=db_8) # starcraft artosiscasts
-parse_channel_videos(channel_username="TommyStarcraft2", limit=100, mydb=db_8, filter_func=filter_starcraft) # starcraft tommystartcraft2
+parse_channel_videos(channel_username="FalconPaladin", limit=100, mydb=db_8) # starcraft FalconPaladin
+# parse_channel_videos(channel_username="TommyStarcraft2", limit=100, mydb=db_8, filter_func=filter_starcraft) # starcraft tommystartcraft2
 list_json["8"] = parse_db_to_channel(db_8)
 
 

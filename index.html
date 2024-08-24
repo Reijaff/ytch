@@ -2,6 +2,15 @@
 <html lang="en">
 
 <head>
+    <!-- Google tag (gtag.js)
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2582CWYFEE"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-2582CWYFEE');
+    </script> -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,6 +52,8 @@
         <div class="wrapper">
             <div class="close" onclick="toggleInfo()"><img src="icons/x.svg"></div>
             <div class="content">
+                <!-- <div class="title">Contact</div>
+                <div class="text"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="89f0fdeae1f1f0f3c9eee4e8e0e5a7eae6e4">[email&#160;protected]</a></div> -->
                 <div class="title">Support</div>
                 <div class="text">
                     <a href="https://www.buymeacoffee.com/hadisafa">Buy Me a Coffee</a>
@@ -114,35 +125,65 @@
 
 
     <div class="control">
-        <div class="wrapper">
-            <div class="button min power-button" onclick="togglePower()"><img src="icons/power.svg"></div>
-            <div class="button  min" onclick="toggleGuide()"><img src="icons/book-open.svg"></div>
-            <div class="button" onclick="toggleControl()"><img class="minimizeImg" src="icons/minimize-2.svg"></div>
+        <div class="t-1">
+            <div class="wrapper w">
+                <div class="button min power-button" onclick="togglePower()"><img src="icons/power.svg"></div>
+                <div class="button  min" onclick="toggleGuide()"><img src="icons/book-open.svg"></div>
+                <div class="button" onclick="toggleControl()"><img class="minimizeImg" src="icons/minimize-2.svg"></div>
+            </div>
+            <div class="wrapper w">
+                <div class="long-button">
+                    <div class="button  min" onclick="changeVolume(5)"><img src="icons/plus.svg"></div>
+                    <div class="button  min" onclick="changeVolume(-5)"><img src="icons/minus.svg"></div>
+                </div>
+                <div class="middle-buttons">
+                    <div class="button  min" onclick="toggleMute()"><img class="muteIcon" src="icons/volume-x.svg">
+                    </div>
+                    <div class="button min" onclick="toggleInfo()"><img src="icons/info.svg"></div>
+                </div>
+                <div class="long-button">
+                    <div class="button  min" onclick="switchChannel(1)"><img src="icons/chevron-up.svg"></div>
+                    <div class="button min" onclick="switchChannel(-1)"><img src="icons/chevron-down.svg"></div>
+                </div>
+            </div>
+            <div class="wrapper">
+                <div class="videoIdElement min">
+                    <div class="text"></div>
+                </div>
+                <div class="button min" onclick="toggleFullScreen()"><img class="full-screen-icon"
+                        src="icons/maximize.svg">
+                </div>
+            </div>
         </div>
-        <div class="wrapper">
-            <div class="long-button">
-                <div class="button  min" onclick="changeVolume(5)"><img src="icons/plus.svg"></div>
-                <div class="button  min" onclick="changeVolume(-5)"><img src="icons/minus.svg"></div>
+        <div class="t-2">
+            <div class="wrapper">
+                <div class="button" onclick="numberInput(1)">1</div>
+                <div class="button" onclick="numberInput(2)">2</div>
+                <div class="button" onclick="numberInput(3)">3</div>
             </div>
-            <div class="middle-buttons">
-                <div class="button  min" onclick="toggleMute()"><img class="muteIcon" src="icons/volume-x.svg"></div>
-                <div class="button min" onclick="toggleInfo()"><img src="icons/info.svg"></div>
+            <div class="wrapper">
+                <div class="button" onclick="numberInput(4)">4</div>
+                <div class="button" onclick="numberInput(5)">5</div>
+                <div class="button" onclick="numberInput(6)">6</div>
             </div>
-            <div class="long-button">
-                <div class="button  min" onclick="switchChannel(1)"><img src="icons/chevron-up.svg"></div>
-                <div class="button min" onclick="switchChannel(-1)"><img src="icons/chevron-down.svg"></div>
+            <div class="wrapper">
+                <div class="button" onclick="numberInput(7)">7</div>
+                <div class="button" onclick="numberInput(8)">8</div>
+                <div class="button" onclick="numberInput(9)">9</div>
             </div>
-        </div>
-        <div class="wrapper">
-            <div class="videoIdElement min">
-                <div class="text"></div>
+            <div class="wrapper">
+                <div class="button" onclick="recallChannel()"><img src="icons/corner-up-left.svg"></div>
+                <div class="button" onclick="numberInput(0)">0</div>
+                <div class="button" onclick="goToChannel()"><img src="icons/corner-up-right.svg"></div>
             </div>
         </div>
     </div>
     <div class="channel-name"></div>
 
+    <!-- <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script> -->
     <script src="main.js"></script>
 
+<!-- <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"8b8286b089683bbf","version":"2024.8.0","r":1,"token":"a1db3fc4bc204cb3bef8b858e93510bc","serverTiming":{"name":{"cfL4":true}}}' crossorigin="anonymous"></script> -->
 </body>
 
 </html>
