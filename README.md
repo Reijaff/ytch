@@ -13,6 +13,12 @@ Currently streaming channels include:
 * Game trailers
 * Starcraft 2 commentary
 * Starcraft commentary
+* Forza Motorsport
+* Microsoft Flight Simulator
+* Truck Simulator
+* Train Simulator
+* Call Of Duty Warzone
+
 
 Feel free to give it a try and let me know what you think!
 
