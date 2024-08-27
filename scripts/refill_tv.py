@@ -121,7 +121,7 @@ def filter_short_videos(video):
 
 
 db_6 = initialize_database("./db/ch6.json")
-parse_channel_videos(channel_username="GameTrailers", limit=2000, mydb=db_6, filter_func=filter_short_videos) # game trailers
+parse_channel_videos(channel_username="GameTrailers", limit=2500, mydb=db_6, filter_func=filter_short_videos) # game trailers
 list_json["6"] = parse_db_to_channel(db_6)
 
 # 7
@@ -162,8 +162,8 @@ list_json["8"] = parse_db_to_channel(db_8)
 
 # 9
 db_9 = initialize_database("./db/ch9.json")
-parse_playlist_videos("PLiLSCJl00NYv9vMcQ7XTczOEeZOghcc9o", limit=100, mydb=db_9) # forza motorsport SCDR Racing
-parse_channel_videos(channel_username="nukaGT", limit=100, mydb=db_9) # forza motorsport nukagt
+parse_playlist_videos("PLiLSCJl00NYv9vMcQ7XTczOEeZOghcc9o", limit=150, mydb=db_9) # forza motorsport SCDR Racing
+parse_channel_videos(channel_username="nukaGT", limit=150, mydb=db_9) # forza motorsport nukagt
 list_json["9"] = parse_db_to_channel(db_9)
 
 # 10
