@@ -187,6 +187,10 @@ db_13 = initialize_database("./db/ch13.json")
 parse_channel_videos(channel_username="NoAnnoyingCommentary", limit=200, mydb=db_13) # cod warzone NoAnnoyingCommentary
 list_json["13"] = parse_db_to_channel(db_13)
 
+# 14
+db_14 = initialize_database("./db/ch14.json")
+parse_playlist_videos("PLSlm9cXT9E4_m5nj1xwzQRHGW8HlWWpqX", limit=300, mydb=db_14) # war thunder justgameplay_yt
+list_json["14"] = parse_db_to_channel(db_14)
 
 
 
