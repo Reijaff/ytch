@@ -172,8 +172,19 @@ parse_playlist_videos("PLNZqvMOPUHynQB1nFUA_ReMAdCZekYZtD", mydb=db_10) # micros
 list_json["10"] = parse_db_to_channel(db_10)
 
 # 11
+
+def filter_timelapse(video):
+
+    title = video.get("title", {}).get("runs", [{}])[0].get("text", "Unknown Title")
+    if "time lapse".lower() in title.lower():
+        return False
+    elif "time-lapse".lower() in title.lower():
+        return False
+    else:
+        return True
+
 db_11 = initialize_database("./db/ch11.json")
-parse_channel_videos(channel_username="ganymede_", limit=100, mydb=db_11) # truck simulator ganymede
+parse_channel_videos(channel_username="ganymede_", limit=100, mydb=db_11, filter_func=filter_timelapse) # truck simulator ganymede
 list_json["11"] = parse_db_to_channel(db_11)
 
 # 12
