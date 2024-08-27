@@ -84,7 +84,7 @@ list_json = {}
 
 # 1
 db_1 = initialize_database("./db/ch1.json")
-parse_channel_videos(channel_username="BrightWorksTV", limit=70, mydb=db_1) # bar brightworks tv
+parse_channel_videos(channel_username="BrightWorksTV", limit=80, mydb=db_1) # bar brightworks tv
 parse_playlist_videos("PL9ijWAhxNikKT4g5qPnsGzKN-ZJjMheyr",limit=50, mydb=db_1) # bar requiem tv
 list_json["1"] = parse_db_to_channel(db_1)
 
@@ -102,7 +102,7 @@ list_json["3"] = parse_db_to_channel(db_3)
 
 # 4
 db_4 = initialize_database("./db/ch4.json")
-parse_playlist_videos("PLf1MgnzRUat_MEw20ESJAL4IdWt-Ol5Aq", limit=50, mydb=db_4) # aoe4 drongo
+parse_playlist_videos("PLf1MgnzRUat_MEw20ESJAL4IdWt-Ol5Aq", limit=60, mydb=db_4) # aoe4 drongo
 parse_playlist_videos("PLhtm1GekY31I3BcJXNWNxMQGui49NUiEE", limit=50, mydb=db_4) # aoe4 farm man off
 list_json["4"] = parse_db_to_channel(db_4)
 
