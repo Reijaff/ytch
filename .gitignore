@@ -1,1 +1,9 @@
-scripts/__pycache__/
+# Ignore generated database files
+db/
+
+# Ignore the generated playlist
+list.json
+
+# Python cache
+__pycache__/
+*.pyc
