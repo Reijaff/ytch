@@ -328,16 +328,18 @@ def get_next_data(data: dict, sort_by: str = None, is_playlist: bool = False) ->
     if not endpoint:
         return None
 
-    if is_playlist:
+    
+    if "continuationCommand" in list(endpoint.keys()):
+
         next_data = {
-            "token": endpoint["commandExecutorCommand"]["commands"][1][
-                "continuationCommand"
-            ]["token"],
+            "token": endpoint["continuationCommand"]["token"],
             "click_params": {"clickTrackingParams": endpoint["clickTrackingParams"]},
         }
     else:
         next_data = {
-            "token": endpoint["continuationCommand"]["token"],
+            "token": endpoint["commandExecutorCommand"]["commands"][1][
+                "continuationCommand"
+            ]["token"],
             "click_params": {"clickTrackingParams": endpoint["clickTrackingParams"]},
         }
 
