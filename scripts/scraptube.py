@@ -325,8 +325,16 @@ def get_next_data(data: dict, sort_by: str = None) -> dict:
         endpoint = next(search_dict(data, "continuationEndpoint"), None)
     if not endpoint:
         return None
+
+    # next_data = {
+    #     "token": endpoint["continuationCommand"]["token"],
+    #     "click_params": {"clickTrackingParams": endpoint["clickTrackingParams"]},
+    # }
+
     next_data = {
-        "token": endpoint["continuationCommand"]["token"],
+        "token": endpoint["commandExecutorCommand"]["commands"][1][
+            "continuationCommand"
+        ]["token"],
         "click_params": {"clickTrackingParams": endpoint["clickTrackingParams"]},
     }
 

@@ -85,7 +85,7 @@ list_json = {}
 # 1
 db_1 = initialize_database("./db/ch1.json")
 parse_channel_videos(channel_username="BrightWorksTV", limit=80, mydb=db_1) # bar brightworks tv
-# parse_playlist_videos("PL9ijWAhxNikKT4g5qPnsGzKN-ZJjMheyr",limit=50, mydb=db_1) # bar requiem tv
+parse_playlist_videos("PL9ijWAhxNikKT4g5qPnsGzKN-ZJjMheyr",limit=50, mydb=db_1) # bar requiem tv
 list_json["1"] = parse_db_to_channel(db_1)
 
 # 2
@@ -97,14 +97,14 @@ list_json["2"] = parse_db_to_channel(db_2)
 
 # 3
 db_3 = initialize_database("./db/ch3.json")
-# parse_playlist_videos("PLnPuuHgGQ4yTmTlVYBWh_YbJ4aKMC7I0d", mydb=db_3) # heavy metal classic soundtrack
-# parse_playlist_videos("PLOUzUrKhNae6JqXAjG56Akc79vuzYCOYz", mydb=db_3) # heavy metal mix soundtrack
+parse_playlist_videos("PLnPuuHgGQ4yTmTlVYBWh_YbJ4aKMC7I0d", mydb=db_3) # heavy metal classic soundtrack
+parse_playlist_videos("PLOUzUrKhNae6JqXAjG56Akc79vuzYCOYz", mydb=db_3) # heavy metal mix soundtrack
 list_json["3"] = parse_db_to_channel(db_3)
 
 # 4
 db_4 = initialize_database("./db/ch4.json")
-# parse_playlist_videos("PLf1MgnzRUat_MEw20ESJAL4IdWt-Ol5Aq", limit=60, mydb=db_4) # aoe4 drongo
-# parse_playlist_videos("PLhtm1GekY31I3BcJXNWNxMQGui49NUiEE", limit=50, mydb=db_4) # aoe4 farm man off
+parse_playlist_videos("PLf1MgnzRUat_MEw20ESJAL4IdWt-Ol5Aq", limit=60, mydb=db_4) # aoe4 drongo
+parse_playlist_videos("PLhtm1GekY31I3BcJXNWNxMQGui49NUiEE", limit=50, mydb=db_4) # aoe4 farm man off
 list_json["4"] = parse_db_to_channel(db_4)
 
 # 5
@@ -134,7 +134,7 @@ def filter_starcraft2_short_videos(video):
     return False
 
 db_7 = initialize_database("./db/ch7.json")
-# parse_playlist_videos("PLT0hfPWJS6_tn67k5DV5D4QT0bw-W2eDx", limit=60, mydb=db_7) # starcraft 2 lovko tv
+parse_playlist_videos("PLT0hfPWJS6_tn67k5DV5D4QT0bw-W2eDx", limit=60, mydb=db_7) # starcraft 2 lovko tv
 parse_channel_videos(channel_username="PiGCasts", limit=60, mydb=db_7, filter_func=filter_starcraft2_short_videos) # starcraft 2 pigcasts
 list_json["7"] = parse_db_to_channel(db_7)
 
@@ -157,19 +157,19 @@ def filter_starcraft_short_videos(video):
 db_8 = initialize_database("./db/ch8.json")
 parse_channel_videos(channel_username="ArtosisCasts", limit=150, mydb=db_8, filter_func=filter_starcraft_short_videos) # starcraft artosiscasts
 parse_channel_videos(channel_username="FalconPaladin", limit=100, mydb=db_8) # starcraft FalconPaladin
-# parse_channel_videos(channel_username="TommyStarcraft2", limit=100, mydb=db_8, filter_func=filter_starcraft) # starcraft tommystartcraft2
+parse_channel_videos(channel_username="TommyStarcraft2", limit=100, mydb=db_8, filter_func=filter_starcraft) # starcraft tommystartcraft2
 list_json["8"] = parse_db_to_channel(db_8)
 
 
 # 9
 db_9 = initialize_database("./db/ch9.json")
-# parse_playlist_videos("PLiLSCJl00NYv9vMcQ7XTczOEeZOghcc9o", limit=150, mydb=db_9) # forza motorsport SCDR Racing
+parse_playlist_videos("PLiLSCJl00NYv9vMcQ7XTczOEeZOghcc9o", limit=150, mydb=db_9) # forza motorsport SCDR Racing
 parse_channel_videos(channel_username="nukaGT", limit=150, mydb=db_9) # forza motorsport nukagt
 list_json["9"] = parse_db_to_channel(db_9)
 
 # 10
 db_10 = initialize_database("./db/ch10.json")
-# parse_playlist_videos("PLNZqvMOPUHynQB1nFUA_ReMAdCZekYZtD", mydb=db_10) # microsoft flight simulator foredoomer
+parse_playlist_videos("PLNZqvMOPUHynQB1nFUA_ReMAdCZekYZtD", mydb=db_10) # microsoft flight simulator foredoomer
 list_json["10"] = parse_db_to_channel(db_10)
 
 # 11
@@ -190,8 +190,8 @@ list_json["11"] = parse_db_to_channel(db_11)
 
 # 12
 db_12 = initialize_database("./db/ch12.json")
-# parse_playlist_videos("PLqHccTxQCXIxNQgrO4NVP7GCKQtiJrcgN", mydb=db_12) # train sim ds&m railways
-# parse_playlist_videos("PLKnaE1W2SlVvw1J5hACYzVl5wmOJAW1k0", mydb=db_12) # train sim trains & co
+parse_playlist_videos("PLqHccTxQCXIxNQgrO4NVP7GCKQtiJrcgN", mydb=db_12) # train sim ds&m railways
+parse_playlist_videos("PLKnaE1W2SlVvw1J5hACYzVl5wmOJAW1k0", mydb=db_12) # train sim trains & co
 list_json["12"] = parse_db_to_channel(db_12)
 
 # 13
@@ -201,7 +201,7 @@ list_json["13"] = parse_db_to_channel(db_13)
 
 # 14
 db_14 = initialize_database("./db/ch14.json")
-# parse_playlist_videos("PLSlm9cXT9E4_m5nj1xwzQRHGW8HlWWpqX", limit=300, mydb=db_14) # war thunder justgameplay_yt
+parse_playlist_videos("PLSlm9cXT9E4_m5nj1xwzQRHGW8HlWWpqX", limit=300, mydb=db_14) # war thunder justgameplay_yt
 list_json["14"] = parse_db_to_channel(db_14)
 
 
