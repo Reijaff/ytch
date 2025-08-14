@@ -97,8 +97,8 @@ list_json["2"] = parse_db_to_channel(db_2)
 
 # 3
 db_3 = initialize_database("./db/ch3.json")
-parse_playlist_videos("PLnPuuHgGQ4yTmTlVYBWh_YbJ4aKMC7I0d", mydb=db_3) # heavy metal classic soundtrack
-parse_playlist_videos("PLOUzUrKhNae6JqXAjG56Akc79vuzYCOYz", mydb=db_3) # heavy metal mix soundtrack
+# parse_playlist_videos("PLnPuuHgGQ4yTmTlVYBWh_YbJ4aKMC7I0d", mydb=db_3) # heavy metal classic soundtrack
+# parse_playlist_videos("PLOUzUrKhNae6JqXAjG56Akc79vuzYCOYz", mydb=db_3) # heavy metal mix soundtrack
 list_json["3"] = parse_db_to_channel(db_3)
 
 # 4
