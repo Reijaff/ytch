@@ -121,6 +121,7 @@ def get_playlist(
         limit,
         sleep,
         proxies,
+        is_playlist=True,
     )
     for video in videos:
         yield video
@@ -226,6 +227,7 @@ def get_videos(
     sleep: float,
     proxies: dict = None,
     sort_by: str = None,
+    is_playlist: bool = False,
 ) -> Generator[dict, None, None]:
     session = get_session(proxies)
     is_first = True
@@ -244,13 +246,13 @@ def get_videos(
                 get_json_from_html(html, "var ytInitialData = ", 0, "};") + "}"
             )
             data = next(search_dict(data, selector_list), None)
-            next_data = get_next_data(data, sort_by)
+            next_data = get_next_data(data, sort_by, is_playlist)
             is_first = False
             if sort_by and sort_by != "newest":
                 continue
         else:
             data = get_ajax_data(session, api_endpoint, api_key, next_data, client)
-            next_data = get_next_data(data)
+            next_data = get_next_data(data, None, is_playlist)
         for result in get_videos_items(data, selector_item):
             try:
                 count += 1
@@ -310,7 +312,7 @@ def get_json_from_html(html: str, key: str, num_chars: int = 2, stop: str = '"')
     return html[pos_begin:pos_end]
 
 
-def get_next_data(data: dict, sort_by: str = None) -> dict:
+def get_next_data(data: dict, sort_by: str = None, is_playlist: bool = False) -> dict:
     # Youtube, please don't change the order of these
     sort_by_map = {
         "newest": 0,
@@ -326,17 +328,18 @@ def get_next_data(data: dict, sort_by: str = None) -> dict:
     if not endpoint:
         return None
 
-    # next_data = {
-    #     "token": endpoint["continuationCommand"]["token"],
-    #     "click_params": {"clickTrackingParams": endpoint["clickTrackingParams"]},
-    # }
-
-    next_data = {
-        "token": endpoint["commandExecutorCommand"]["commands"][1][
-            "continuationCommand"
-        ]["token"],
-        "click_params": {"clickTrackingParams": endpoint["clickTrackingParams"]},
-    }
+    if is_playlist:
+        next_data = {
+            "token": endpoint["commandExecutorCommand"]["commands"][1][
+                "continuationCommand"
+            ]["token"],
+            "click_params": {"clickTrackingParams": endpoint["clickTrackingParams"]},
+        }
+    else:
+        next_data = {
+            "token": endpoint["continuationCommand"]["token"],
+            "click_params": {"clickTrackingParams": endpoint["clickTrackingParams"]},
+        }
 
     return next_data
 
