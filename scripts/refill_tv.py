@@ -90,7 +90,7 @@ list_json["1"] = parse_db_to_channel(db_1)
 
 # 2
 db_2 = initialize_database("./db/ch2.json")
-parse_channel_videos(channel_username="Ar-BARon", limit=30, mydb=db_2) # bar arbaron
+# parse_channel_videos(channel_username="Ar-BARon", limit=30, mydb=db_2) # bar arbaron
 parse_channel_videos(channel_username="lostdeadmanthree", limit=100, mydb=db_2) # bar lostdeadman
 parse_channel_videos(channel_username="dskinnerify", limit=20, mydb=db_2) # bar dskinnerify
 list_json["2"] = parse_db_to_channel(db_2)
@@ -204,6 +204,60 @@ db_14 = initialize_database("./db/ch14.json")
 parse_playlist_videos("PLSlm9cXT9E4_m5nj1xwzQRHGW8HlWWpqX", limit=300, mydb=db_14) # war thunder justgameplay_yt
 list_json["14"] = parse_db_to_channel(db_14)
 
+# 15
+db_15 = initialize_database("./db/ch15.json")
+parse_channel_videos(channel_username="AaronMclaren32", limit=200, mydb=db_15) # beamng drive AaronMclaren32
+list_json["15"] = parse_db_to_channel(db_15)
+
+# 16
+
+def filter_8k(video):
+    title = video.get("title", {}).get("runs", [{}])[0].get("text", "Unknown Title")
+    if "8K".lower() in title.lower():
+        return True
+    else:
+        return False
+
+def filter_mission(video):
+    title = video.get("title", {}).get("runs", [{}])[0].get("text", "Unknown Title")
+    if "mission".lower() in title.lower():
+        return False
+    else:
+        return True
+
+def filter_bike_ride(video):
+    title = video.get("title", {}).get("runs", [{}])[0].get("text", "Unknown Title")
+    if ("4k".lower() in title.lower()) or ("8k".lower() in title.lower()):
+        if "motorcycle".lower() in title.lower():
+            return True
+        elif "bike".lower() in title.lower():
+            return True
+    else:
+        return False
+
+db_16 = initialize_database("./db/ch16.json")
+parse_channel_videos(channel_username="NextGenDreams", mydb=db_16, filter_func=filter_8k) # 8k gameplay nextgendreams
+parse_playlist_videos("PLqTDbNCTi4XVNz8jtJlvuc8vlk7KEElgL", mydb=db_16, filter_func=filter_bike_ride) # 4k/8k gta gameplay inter
+parse_channel_videos(channel_username="Gam3_4_Lif3", mydb=db_16, filter_func=filter_mission) # 4k gta5 gameplay Gam3_4_Lif3
+parse_channel_videos(channel_username="H1TEK404", mydb=db_16) # 4k cyberpunk gameplay H1TEK404
+
+list_json["16"] = parse_db_to_channel(db_16)
+
+# 17
+
+def filter_pov(video):
+    title = video.get("title", {}).get("runs", [{}])[0].get("text", "Unknown Title")
+    if "pov".lower() in title.lower():
+        return True
+    else:
+        return False
+
+db_17 = initialize_database("./db/ch17.json")
+parse_channel_videos(channel_username="Endur888", mydb=db_17) # photoreal asseto corsa  Endur888
+parse_channel_videos(channel_username="enviousAC", mydb=db_17, filter_func=filter_pov) # photoreal assetto corsa  enviousAC
+
+
+list_json["17"] = parse_db_to_channel(db_17)
 
 
 # Write the playlist to a file
