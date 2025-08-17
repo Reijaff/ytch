@@ -234,11 +234,12 @@ def filter_bike_ride(video):
             return True
     else:
         return False
+    return False
 
 db_16 = initialize_database("./db/ch16.json")
 parse_channel_videos(channel_username="NextGenDreams", mydb=db_16, filter_func=filter_8k) # 8k gameplay nextgendreams
 parse_playlist_videos("PLqTDbNCTi4XVNz8jtJlvuc8vlk7KEElgL", mydb=db_16, filter_func=filter_bike_ride) # 4k/8k gta gameplay inter
-parse_channel_videos(channel_username="Gam3_4_Lif3", mydb=db_16, filter_func=filter_mission) # 4k gta5 gameplay Gam3_4_Lif3
+parse_channel_videos(channel_username="Gam3_4_Lif3", mydb=db_16, limit=200, filter_func=filter_mission) # 4k gta5 gameplay Gam3_4_Lif3
 parse_channel_videos(channel_username="H1TEK404", mydb=db_16) # 4k cyberpunk gameplay H1TEK404
 
 list_json["16"] = parse_db_to_channel(db_16)
