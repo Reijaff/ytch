@@ -154,9 +154,18 @@ def filter_starcraft_short_videos(video):
         return dur < 3600
     return False
 
+def filter_broodwar(video):
+
+    title = video.get("title", {}).get("runs", [{}])[0].get("text", "Unknown Title")
+    if "brood war".lower() in title.lower():
+        return True
+    else:
+        return False
+    return False
+
 db_8 = initialize_database("./db/ch8.json")
 parse_channel_videos(channel_username="ArtosisCasts", limit=150, mydb=db_8, filter_func=filter_starcraft_short_videos) # starcraft artosiscasts
-parse_channel_videos(channel_username="FalconPaladin", limit=100, mydb=db_8) # starcraft FalconPaladin
+parse_channel_videos(channel_username="FalconPaladin", limit=100, mydb=db_8, filter_func=filter_broodwar) # starcraft FalconPaladin
 parse_channel_videos(channel_username="TommyStarcraft2", limit=100, mydb=db_8, filter_func=filter_starcraft) # starcraft tommystartcraft2
 list_json["8"] = parse_db_to_channel(db_8)
 
@@ -227,10 +236,11 @@ def filter_mission(video):
 
 def filter_bike_ride(video):
     title = video.get("title", {}).get("runs", [{}])[0].get("text", "Unknown Title")
-    if ("4k".lower() in title.lower()) or ("8k".lower() in title.lower()):
+    if "4k".lower() in title.lower():
         if "motorcycle".lower() in title.lower():
             return True
-        elif "bike".lower() in title.lower():
+
+        if "bike".lower() in title.lower():
             return True
     else:
         return False
@@ -238,7 +248,7 @@ def filter_bike_ride(video):
 
 db_16 = initialize_database("./db/ch16.json")
 parse_channel_videos(channel_username="NextGenDreams", mydb=db_16, filter_func=filter_8k) # 8k gameplay nextgendreams
-# parse_playlist_videos("PLqTDbNCTi4XVNz8jtJlvuc8vlk7KEElgL", mydb=db_16, filter_func=filter_bike_ride) # 4k/8k gta gameplay inter
+parse_playlist_videos("PLqTDbNCTi4XVNz8jtJlvuc8vlk7KEElgL", mydb=db_16, limit=200, filter_func=filter_bike_ride) # 4k/8k gta gameplay inter
 parse_channel_videos(channel_username="Gam3_4_Lif3", mydb=db_16, limit=200, filter_func=filter_mission) # 4k gta5 gameplay Gam3_4_Lif3
 parse_channel_videos(channel_username="H1TEK404", mydb=db_16) # 4k cyberpunk gameplay H1TEK404
 
